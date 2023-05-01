@@ -97,7 +97,7 @@ class TSmart:
         stream.close()
         _LOGGER.info("Discovery done")
 
-        devices[1234] = TSmart('1234', '192.168.0.161', 'Device 2')
+        #devices[1234] = TSmart('1234', '192.168.0.161', 'Device 2')
         return devices.values()
 
 
