@@ -1,0 +1,15 @@
+{
+  "domain": "t_smart",
+  "name": "T-Smart Thermostat",
+  "codeowners": [
+    "@pdw-mb"
+  ],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://www.home-assistant.io/integrations/t_smart",
+  "homekit": {},
+  "iot_class": "local_polling",
+  "requirements": [],
+  "ssdp": [],
+  "zeroconf": []
+}
