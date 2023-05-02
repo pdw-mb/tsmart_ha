@@ -31,7 +31,7 @@ class TSmart:
         self.mode = None
         self.setpoint = None
 
-    async def async_discover():
+    async def async_discover(stop_on_first = False):
 
         sock = socket.socket(socket.AF_INET, # Internet
                              socket.SOCK_DGRAM) # UDP
@@ -85,19 +85,21 @@ class TSmart:
 
                     if remote_addr[0] not in devices:
                         (cmd, sub, sub2, device_type, device_id, name, tz, checksum) = response_struct.unpack(data)
-                        name = name.decode('utf-8').split('0x00')[0]
+                        name = name.decode('utf-8').split('\x00')[0]
                         device_id_str = "%4X" % device_id
                         _LOGGER.info("Discovered %s %s" % (device_id_str, name))
                         devices[remote_addr[0]] = TSmart(device_id_str, remote_addr[0], name)
+                        if stop_on_first:
+                            break
 
                 except asyncio.exceptions.TimeoutError:
                     break
 
+            if stop_on_first and len(devices) > 0:
+                break
 
         stream.close()
-        _LOGGER.info("Discovery done")
 
-        #devices[1234] = TSmart('1234', '192.168.0.161', 'Device 2')
         return devices.values()
 
 
