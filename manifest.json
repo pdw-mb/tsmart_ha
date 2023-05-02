@@ -6,6 +6,7 @@
   "dependencies": [],
   "documentation": "https://www.home-assistant.io/integrations/t_smart",
   "homekit": {},
+  "integration_type": "device",
   "iot_class": "local_polling",
   "requirements": ["asyncio-dgram"],
   "ssdp": [],
