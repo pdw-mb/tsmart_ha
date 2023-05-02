@@ -4,9 +4,24 @@ This repository provides a custom component for enabling a [Tesla T-Smart immers
 
 ## Installation
 
+You can install the component using either the [HACS add-on](https://hacs.xyz) or manually.
+
+### HACS Installation
+
+* In HACS, click the three dots, then "Custom Repositories", and add:
+    * Repository = `pdw-mb/tsmart_ha`
+    * Category = `integration`
+* Click "Explore and download repositories", select "T-Smart thermostat", click "Download" and then restart Home Assistant
+
+### Manual Installation
+
 * Copy (or link) the `custom_components/t_smart/` directory from this repository into your `configuration/custom_components/` directory.
 
 * Restart Home Assistant.
+
+## Discover thermostats
+
+After restarting Home Assistant:
 
 * Go to Settings -> Devices & services -> Add Integration.
 
