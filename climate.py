@@ -75,10 +75,7 @@ class TSmartEntity(ClimateEntity):
         return HVACMode.HEAT if self._tsmart.power else HVACMode.OFF
 
     async def async_set_hvac_mode(self, hvac_mode):
-        await self._tsmart._async_control_set(hvac_mode == HVACMode.HEAT, PRESET_MAP[self.preset_mode], self.current_temperature)
-
-    async def async_set_preset_mode(self, preset_mode):
-        await self._tsmart._async_control_set(self.hvac_mode == HVACMode.HEAT, PRESET_MAP[preset_mode], self.current_temperature)
+        await self._tsmart._async_control_set(hvac_mode == HVACMode.HEAT, PRESET_MAP[self.preset_mode], self.setpoint)
 
     @property
     def current_temperature(self):
@@ -88,12 +85,18 @@ class TSmartEntity(ClimateEntity):
     def target_temperature(self):
         return self._tsmart.setpoint
 
+    async def async_set_target_temperature(self, target_temperature):
+        await self._tsmart._async_control_set(self.hvac_mode == HVACMode.HEAT, PRESET_MAP[self.preset_mode], target_temperature)
+
     def _climate_preset(self, tsmart_mode):
         return next((k for k, v in PRESET_MAP.items() if v == tsmart_mode), None)
 
     @property
     def preset_mode(self):
         return self._climate_preset(self._tsmart.mode)
+
+    async def async_set_preset_mode(self, preset_mode):
+        await self._tsmart._async_control_set(self.hvac_mode == HVACMode.HEAT, PRESET_MAP[preset_mode], self.setpoint)
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -146,14 +149,4 @@ async def async_setup_entry(
     devices = await async_discover_devices(hass)
     async_add_entities(devices)
     
-
-
-#async def async_setup_entry(hass, config_entry, async_add_devices):
-#    """Set up entry."""
-#    _LOGGER.info(config_entry)
-#    async_add_devices([
-#        #TSmartEntity(TSmart("192.168.0.160")),
-#        #TSmartEntity(TSmart("192.168.0.161"))
-#        ], True)
-
 
