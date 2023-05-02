@@ -36,7 +36,6 @@ from datetime import timedelta
 
 _LOGGER = logging.getLogger(__name__)
 
-
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_IP_ADDRESS): cv.string,
@@ -62,6 +61,8 @@ class TSmartEntity(ClimateEntity):
     _attr_supported_features = ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.PRESET_MODE
     _attr_preset_modes = list(PRESET_MAP.keys())
     _attr_icon = "mdi:water-boiler"
+    # Inherit name from DeviceInfo, which is obtained from actual device
+    _attr_has_entity_name = True
     
     def __init__(self, tsmart) -> None:
         self._tsmart = tsmart
@@ -85,8 +86,8 @@ class TSmartEntity(ClimateEntity):
     def target_temperature(self):
         return self._tsmart.setpoint
 
-    async def async_set_target_temperature(self, target_temperature):
-        await self._tsmart._async_control_set(self.hvac_mode == HVACMode.HEAT, PRESET_MAP[self.preset_mode], target_temperature)
+    async def async_set_temperature(self, temperature, **kwargs):
+        await self._tsmart._async_control_set(self.hvac_mode == HVACMode.HEAT, PRESET_MAP[self.preset_mode], temperature)
 
     def _climate_preset(self, tsmart_mode):
         return next((k for k, v in PRESET_MAP.items() if v == tsmart_mode), None)
@@ -119,7 +120,6 @@ def setup_platform(
     discovery_info: DiscoveryInfoType | None = None
 ) -> None:
 
-    _LOGGER.error("setup_platform called")
     ip = config[CONF_IP_ADDRESS]
     #add_entities([TSmartEntity(TSmart(ip))])
 
