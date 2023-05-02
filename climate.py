@@ -76,7 +76,7 @@ class TSmartEntity(ClimateEntity):
         return HVACMode.HEAT if self._tsmart.power else HVACMode.OFF
 
     async def async_set_hvac_mode(self, hvac_mode):
-        await self._tsmart._async_control_set(hvac_mode == HVACMode.HEAT, PRESET_MAP[self.preset_mode], self.setpoint)
+        await self._tsmart._async_control_set(hvac_mode == HVACMode.HEAT, PRESET_MAP[self.preset_mode], self.target_temperature)
 
     @property
     def current_temperature(self):
@@ -97,7 +97,7 @@ class TSmartEntity(ClimateEntity):
         return self._climate_preset(self._tsmart.mode)
 
     async def async_set_preset_mode(self, preset_mode):
-        await self._tsmart._async_control_set(self.hvac_mode == HVACMode.HEAT, PRESET_MAP[preset_mode], self.setpoint)
+        await self._tsmart._async_control_set(self.hvac_mode == HVACMode.HEAT, PRESET_MAP[preset_mode], self.target_temperature)
 
     @property
     def device_info(self) -> DeviceInfo:
