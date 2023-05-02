@@ -4,14 +4,7 @@ This repository provides a custom component for enabling a [Tesla T-Smart immers
 
 ## Installation
 
-* Copy this repository ionto the `configuration/custom_components/` directory.  If
-you have SSH access to your HA installation enabled, you can do it like this:
-
-```
-ssh root@homeassistant 
-cd /configuration/custom_components
-git clone https://github.com/pdw-mb/tsmart_ha.git
-```
+* Copy (or link) the `custom_components/t_smart/` directory from this repository into your `configuration/custom_components/` directory.
 
 * Restart Home Assistant.
 
