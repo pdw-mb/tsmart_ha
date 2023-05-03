@@ -8,18 +8,17 @@ from homeassistant.core import HomeAssistant
 from .const import DOMAIN, DEVICE_IDS
 
 import logging
+
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [Platform.CLIMATE]
+
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up T-Smart Thermostat from a config entry."""
 
     hass.data.setdefault(DOMAIN, {}).setdefault(DEVICE_IDS, set())
-
-    _LOGGER.info(entry)
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-
     return True
 
 
