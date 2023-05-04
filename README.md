@@ -8,6 +8,12 @@ You can install the component using either the [HACS add-on](https://hacs.xyz) o
 
 ### HACS Installation
 
+Use this link:
+
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=pdw-mb&repository=tsmart_ha&category=integration)
+
+Or:
+
 * In HACS, click the three dots, then "Custom Repositories", and add:
     * Repository = `pdw-mb/tsmart_ha`
     * Category = `integration`
