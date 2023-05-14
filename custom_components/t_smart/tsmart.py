@@ -31,6 +31,7 @@ class TSmart:
         self.temperature = None
         self.mode = None
         self.setpoint = None
+        self.relay = None
 
     async def async_discover(stop_on_first=False):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet, UDP
@@ -182,6 +183,7 @@ class TSmart:
         return data
 
     async def _async_get_status(self):
+        _LOGGER.info("Async get status")
         request = struct.pack("=BBBB", 0xF1, 0, 0, 0)
 
         response_struct = struct.Struct("=BBBBHBHBBH16sB")
