@@ -70,7 +70,7 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
         return HVACMode.HEAT if self._tsmart.power else HVACMode.OFF
 
     async def async_set_hvac_mode(self, hvac_mode):
-        await self._tsmart._async_control_set(
+        await self._tsmart.async_control_set(
             hvac_mode == HVACMode.HEAT,
             PRESET_MAP[self.preset_mode],
             self.target_temperature,
@@ -86,7 +86,7 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
         return self._tsmart.setpoint
 
     async def async_set_temperature(self, temperature, **kwargs):
-        await self._tsmart._async_control_set(
+        await self._tsmart.async_control_set(
             self.hvac_mode == HVACMode.HEAT, PRESET_MAP[self.preset_mode], temperature
         )
         await self.coordinator.async_request_refresh()
@@ -99,7 +99,7 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
         return self._climate_preset(self._tsmart.mode)
 
     async def async_set_preset_mode(self, preset_mode):
-        await self._tsmart._async_control_set(
+        await self._tsmart.async_control_set(
             self.hvac_mode == HVACMode.HEAT,
             PRESET_MAP[preset_mode],
             self.target_temperature,
