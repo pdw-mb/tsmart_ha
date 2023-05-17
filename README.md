@@ -35,5 +35,7 @@ After restarting Home Assistant:
 
 * Click "OK" and any thermostats on your network should be discovered.
 
+At present, thermostats that are not available when the integration is loaded (either initially, or when Home Assistant restarts) won't be discovered.  If you need to add thermostats, or thermostats are not detected during a Home Assistant restart, you should use the "Reload" option on the "..." menu for the integration.
+
 
 
