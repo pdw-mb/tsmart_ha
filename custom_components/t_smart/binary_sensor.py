@@ -14,7 +14,6 @@ from homeassistant.components.binary_sensor import (
     BinarySensorDeviceClass,
 )
 
-from .tsmart import TSmart
 from .const import (
     DOMAIN,
     COORDINATORS,

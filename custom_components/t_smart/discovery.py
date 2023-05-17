@@ -6,7 +6,7 @@ from .const import (
     DEVICE_IDS,
 )
 from .coordinator import DeviceDataUpdateCoordinator
-from .tsmart import TSmart
+from tsmart import TSmart
 
 
 class DiscoveryService:

@@ -3,7 +3,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from datetime import timedelta
 
-from .tsmart import TSmart
+from tsmart import TSmart
 from .const import (
     DOMAIN,
 )
@@ -31,4 +31,4 @@ class DeviceDataUpdateCoordinator(DataUpdateCoordinator):
 
     async def _async_update_data(self):
         """Update the state of the device."""
-        await self.device._async_get_status()
+        await self.device.async_get_status()

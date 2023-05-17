@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 from typing import Any
-from .tsmart import TSmart
+from tsmart import TSmart
 
 import voluptuous as vol
 

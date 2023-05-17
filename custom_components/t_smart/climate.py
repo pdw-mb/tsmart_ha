@@ -19,7 +19,7 @@ from homeassistant.components.climate import (
     HVACMode,
     ClimateEntityFeature,
 )
-from .tsmart import TSmart, TSmartMode
+from tsmart import TSmartMode
 from .const import (
     DOMAIN,
     PRESET_MANUAL,
