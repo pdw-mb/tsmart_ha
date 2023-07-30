@@ -1,0 +1,13 @@
+{
+    "config": {
+        "abort": {
+            "no_devices_found": "Não foram encontrados equipamentos na rede",
+            "single_instance_allowed": "Equipaemto já configurado. Só é permitida uma instância."
+        },
+        "step": {
+            "confirm": {
+                "description": "Deseja iniciar a configuração?"
+            }
+        }
+    }
+}
