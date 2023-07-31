@@ -23,7 +23,6 @@ class TSmartCoordinatorEntity(CoordinatorEntity[DeviceDataUpdateCoordinator]):
                 (DOMAIN, self.unique_id)
             },
             name=self._tsmart.name,
-            name_by_user=self._tsmart.name,
             manufacturer="Tesla Ltd.",
             model="T-Smart",
         )
