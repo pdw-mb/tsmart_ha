@@ -2,22 +2,24 @@
 
 This repository provides a custom component for enabling a [Tesla T-Smart immersion heater thermostat](https://www.teslauk.com/product/7795/t-smart-thermostat) to be used with [Home Assistant](https://home-assistant.io).
 
+**This is a community developed and maintained project, and is not supported or endorsed by Tesla (UK) Ltd.**
+
 ## Installation
 
 You can install the component using either the [HACS add-on](https://hacs.xyz) or manually.
 
 ### HACS Installation
 
-Use this link:
+[![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=pdw-mb&repository=tsmart_ha&category=integration)
+This component is available as a default repository in HACS.  To enable it:
 
-Or:
-
-* In HACS, click the three dots, then "Custom Repositories", and add:
-    * Repository = `pdw-mb/tsmart_ha`
-    * Category = `integration`
-* Click "Explore and download repositories", select "T-Smart thermostat", click "Download" and then restart Home Assistant
+* Go to HACS
+* Select "Integrations" 
+* Click "Explore and Download Repositories"
+* Search for "T-Smart" and select "T-Smart Thermostat"
+* Click Download
+* Restart Home Assistant
 
 ### Manual Installation
 
