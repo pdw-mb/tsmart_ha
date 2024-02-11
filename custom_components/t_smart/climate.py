@@ -49,6 +49,10 @@ PRESET_MAP = {
 class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_hvac_modes = [HVACMode.OFF, HVACMode.HEAT]
+    
+    # Setting the new TURN_ON / TURN_OFF features isn't enough to make stop the
+    # warning message about not setting them
+    _enable_turn_on_off_backwards_compatibility = False
     _attr_supported_features = (
         ClimateEntityFeature.TURN_OFF | ClimateEntityFeature.TURN_ON |
         ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.PRESET_MODE
