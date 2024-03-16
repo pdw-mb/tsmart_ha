@@ -9,7 +9,7 @@ from typing import Any
 
 
 class TSmartCoordinatorEntity(CoordinatorEntity[DeviceDataUpdateCoordinator]):
-    def __init__(self, coordinator) -> None:
+    def __init__(self, coordinator: DeviceDataUpdateCoordinator) -> None:
         super().__init__(coordinator)
         self._tsmart = coordinator.device
         self._attr_unique_id = self._tsmart.device_id

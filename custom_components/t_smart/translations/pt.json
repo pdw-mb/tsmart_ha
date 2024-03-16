@@ -1,13 +1,26 @@
 {
     "config": {
-        "abort": {
-            "no_devices_found": "Não foram encontrados equipamentos na rede",
-            "single_instance_allowed": "Equipaemto já configurado. Só é permitida uma instância."
-        },
         "step": {
+            "user": {
+                "data": {
+                    "ip_address": "IP Address",
+                    "device_id": "Device Id"
+                }
+            },
+            "edit": {
+                "title": "Edit connection information",
+                "data": {
+                    "ip_address": "IP Address",
+                    "device_id": "Device Id"
+                }
+            },
             "confirm": {
                 "description": "Deseja iniciar a configuração?"
             }
+        },
+        "abort": {
+            "no_devices_found": "Não foram encontrados equipamentos na rede",
+            "single_instance_allowed": "Equipaemto já configurado. Só é permitida uma instância."
         }
     }
 }

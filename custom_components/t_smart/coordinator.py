@@ -16,6 +16,8 @@ _LOGGER = logging.getLogger(__name__)
 class DeviceDataUpdateCoordinator(DataUpdateCoordinator):
     """Manages polling for state changes from the device."""
 
+    device: TSmart
+
     def __init__(self, hass: HomeAssistant, device: TSmart) -> None:
         """Initialize the data update coordinator."""
         DataUpdateCoordinator.__init__(
