@@ -35,9 +35,6 @@ After restarting Home Assistant:
 
 * Find "T-Smart Thermostat" and click on it.
 
-* Click "OK" and any thermostats on your network should be discovered.
-
-At present, thermostats that are not available when the integration is loaded (either initially, or when Home Assistant restarts) won't be discovered.  If you need to add thermostats, or thermostats are not detected during a Home Assistant restart, you should use the "Reload" option on the "..." menu for the integration.
-
-
+* Click "OK" and any thermostats on your network should be discovered, or you can manually enter their IP address if not found.  
+Thermostats should have a fixed IP address as the IP address.
 
