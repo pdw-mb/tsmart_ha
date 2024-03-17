@@ -10,3 +10,5 @@ PRESET_SMART = "Smart"
 PRESET_TIMER = "Timer"
 
 CONF_DEVICE_ID = "device_id"
+CONF_DEVICE_NAME = "device_name"
+

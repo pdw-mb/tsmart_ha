@@ -1,13 +1,21 @@
+"""DataUpdateCoordinator for thermostats."""
+
 from homeassistant.core import HomeAssistant
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+
+from homeassistant.const import (
+    CONF_IP_ADDRESS,
+)
 
 from datetime import timedelta
 
-from tsmart import TSmart
+from .tsmart import TSmart
 from .const import (
     DOMAIN,
+    CONF_DEVICE_ID,
+    CONF_DEVICE_NAME,
 )
-
 import logging
 
 _LOGGER = logging.getLogger(__name__)
@@ -17,19 +25,22 @@ class DeviceDataUpdateCoordinator(DataUpdateCoordinator):
     """Manages polling for state changes from the device."""
 
     device: TSmart
+    config_entry: ConfigEntry
 
-    def __init__(self, hass: HomeAssistant, device: TSmart) -> None:
+    def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry) -> None:
         """Initialize the data update coordinator."""
-        DataUpdateCoordinator.__init__(
-            self,
+
+        self.config_entry = config_entry
+        self.device = TSmart(config_entry.data[CONF_IP_ADDRESS], config_entry.data[CONF_DEVICE_ID], config_entry.data[CONF_DEVICE_NAME])
+        self._attr_unique_id = self.device.device_id
+        self._error_count = 0
+
+        super().__init__(
             hass,
             _LOGGER,
-            name=f"{DOMAIN}-{device.device_id}",
+            name=f"{DOMAIN}-{self.device.device_id}",
             update_interval=timedelta(seconds=10),
         )
-        self.device = device
-        self._error_count = 0
-        self._attr_unique_id = device.device_id
 
     async def _async_update_data(self):
         """Update the state of the device."""

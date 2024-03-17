@@ -7,10 +7,8 @@ from homeassistant.core import HomeAssistant
 
 from .const import (
     DOMAIN,
-    DEVICE_IDS,
-    DATA_DISCOVERY_SERVICE,
 )
-from .discovery import DiscoveryService
+from .coordinator import DeviceDataUpdateCoordinator
 
 import logging
 
@@ -22,10 +20,10 @@ PLATFORMS: list[Platform] = [Platform.CLIMATE, Platform.BINARY_SENSOR]
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up T-Smart Thermostat from a config entry."""
 
-    # hass.data.setdefault(DOMAIN, {}).setdefault(DEVICE_IDS, set())
-    # tsmart_discovery = DiscoveryService(hass)
-    # hass.data[DATA_DISCOVERY_SERVICE] = tsmart_discovery
-    # await tsmart_discovery.async_discover_devices()
+    hass.data[DOMAIN][entry.entry_id] = DeviceDataUpdateCoordinator(
+        hass=hass,
+        config_entry=entry
+        )
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True

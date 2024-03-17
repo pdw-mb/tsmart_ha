@@ -4,7 +4,7 @@ from __future__ import annotations
 import logging
 import asyncio
 from typing import Any
-from tsmart import TSmart
+from .tsmart import TSmart
 
 import voluptuous as vol
 
@@ -22,6 +22,7 @@ from .const import (
     DOMAIN,
     DEVICE_IDS,
     CONF_DEVICE_ID,
+    CONF_DEVICE_NAME,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -34,7 +35,7 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 
 CONFIG_VERSION = 1
 
-TIMEOUT = 5
+TIMEOUT = 2
 
 def _base_schema(discovery_info=None):
     """Generate base schema."""
@@ -75,31 +76,41 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         self.data_schema = _base_schema()
         self.discovery_info = None
 
-    async def _discover(self, uuid=None):
+    async def _discover(self):
         """Discover an unconfigured TSmart thermostat."""
         self.discovery_info = None
 
         devices = await TSmart.async_discover()
 
-        # Filter out already discovered devices
-        new_devices = [
-            d for d in devices if d.device_id not in self.hass.data[DOMAIN][DEVICE_IDS]
-        ]
+        for device in devices:
+            if device.device_id not in config_entries:
 
-        if len(new_devices) == 0:
-            return
+                self.discovery_info = {
+                    CONF_IP_ADDRESS: device.ip,
+                    CONF_DEVICE_ID: device.device_id,
+                    CONF_DEVICE_NAME: device.name,
+                }
+                _LOGGER.debug("Discovered thermostat: %s", self.discovery_info)
 
-        new_device = new_devices[0]
+                # update with suggested values from discovery
+                self.data_schema = _base_schema(self.discovery_info)
 
-        self.discovery_info = {
-            CONF_IP_ADDRESS: new_device.ip,
-            CONF_DEVICE_ID: new_device.device_id,
-        }
-        _LOGGER.debug("Discovered thermostat: %s", self.discovery_info)
+    async def _validate_input(self, data):
+        """Validate the user input allows us to connect.
 
-        # update with suggested values from discovery
-        self.data_schema = _base_schema(self.discovery_info)
+        Abort if device_id already configured.
+        """
+        device = TSmart(ip = data[CONF_IP_ADDRESS])
 
+        try:
+            async with asyncio.timeout(TIMEOUT):
+                await device.async_get_configuration()
+        except TimeoutError:
+            return "no_thermostat_found"
+
+        if device.device_id:
+            await self.async_set_unique_id(device.device_id)
+            self._abort_if_unique_id_configured()
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
@@ -109,20 +120,32 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             # Try to connect and do any error checking here
-            device = TSmart(device_id = "X", ip = user_input[CONF_IP_ADDRESS])
+            device = TSmart(ip = user_input[CONF_IP_ADDRESS])
+
+            try:
+                async with asyncio.timeout(TIMEOUT):
+                    await device.async_get_configuration()
+            except TimeoutError:
+                errors["base"] = "no_thermostat_found"
+
+            user_input[CONF_DEVICE_ID] = device.device_id
+            user_input[CONF_DEVICE_NAME] = device.name
 
             # Save instance
             if not errors:
                 return self.async_create_entry(
-                    title=f"T-Smart: {user_input[CONF_IP_ADDRESS]}", data=user_input
+                    title=f"T-Smart: {device.device_id}", data=user_input
                 )
 
-        # no device specified, see if we can discover an unconfigured thermostat
-        try:
-            async with asyncio.timeout(TIMEOUT):
-                await self._discover()
-            return await self.async_step_edit()
-        except TimeoutError:
+            # no device specified, see if we can discover an unconfigured thermostat
+            await self._discover()
+            if self.discovery_info:
+                await self.async_set_unique_id(self.discovery_info.device_id)
+                user_input[CONF_IP_ADDRESS] = self.discovery_info.ip
+                user_input[CONF_DEVICE_ID] = self.discovery_info.device_id
+                user_input[CONF_DEVICE_NAME] = self.discovery_info.name
+                return await self.async_step_edit(user_input)
+
             errors["base"] = "no_thermostat_found"
 
         return self.async_show_form(
@@ -143,14 +166,3 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="edit", data_schema=self.data_schema, errors=errors
         )
-
-# async def _async_has_devices(hass: HomeAssistant) -> bool:
-#     """Return if there are devices that can be discovered."""
-#     # Stop as soon as we find any device.  Do a full scan later.
-#     devices = await TSmart.async_discover(stop_on_first=True)
-#     return len(devices) > 0
-
-
-# config_entry_flow.register_discovery_flow(
-#     DOMAIN, "T-Smart Thermostat", _async_has_devices
-# )

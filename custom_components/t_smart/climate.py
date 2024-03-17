@@ -25,9 +25,8 @@ from .const import (
     PRESET_MANUAL,
     PRESET_SMART,
     PRESET_TIMER,
-    COORDINATORS,
 )
-from .coordinator import DeviceDataUpdateCoordinator
+
 from .entity import TSmartCoordinatorEntity
 
 from datetime import timedelta
@@ -49,7 +48,7 @@ PRESET_MAP = {
 class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_hvac_modes = [HVACMode.OFF, HVACMode.HEAT]
-    
+
     # Setting the new TURN_ON / TURN_OFF features isn't enough to make stop the
     # warning message about not setting them
     _enable_turn_on_off_backwards_compatibility = False
@@ -117,5 +116,5 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    for coordinator in hass.data[DOMAIN][COORDINATORS]:
-        async_add_entities([TSmartClimateEntity(coordinator)])
+    coordinator = hass.data[DOMAIN][config_entry.entry_id]
+    async_add_entities([TSmartClimateEntity(coordinator)])

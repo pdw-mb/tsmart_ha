@@ -3,24 +3,25 @@
         "step": {
             "user": {
                 "data": {
-                    "ip_address": "IP Address",
-                    "device_id": "Device Id"
+                    "ip_address": "IP Address"
                 }
             },
             "edit": {
                 "title": "Edit connection information",
                 "data": {
-                    "ip_address": "IP Address",
-                    "device_id": "Device Id"
+                    "ip_address": "IP Address"
                 }
             },
             "confirm": {
                 "description": "Do you want to start setup?"
             }
         },
+        "error": {
+            "no_thermostat_found": "No thermostat found."
+        },
         "abort": {
-            "no_devices_found": "No devices found on the network",
-            "single_instance_allowed": "Already configured. Only a single configuration possible."
+            "no_devices_found": "No devices found on the network.",
+            "already_configures": "Already configured."
         }
     }
 }

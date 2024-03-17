@@ -18,9 +18,12 @@
                 "description": "Deseja iniciar a configuração?"
             }
         },
+        "error": {
+            "no_thermostat_found": "No thermostat found."
+        },
         "abort": {
-            "no_devices_found": "Não foram encontrados equipamentos na rede",
-            "single_instance_allowed": "Equipaemto já configurado. Só é permitida uma instância."
+            "no_devices_found": "Não foram encontrados equipamentos na rede.",
+            "already_configured": "Equipaemto já configurado."
         }
     }
 }
