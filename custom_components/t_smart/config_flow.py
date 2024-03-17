@@ -9,10 +9,6 @@ from .tsmart import TSmart
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers import config_entry_flow
-from homeassistant.data_entry_flow import FlowResult
-from homeassistant.exceptions import HomeAssistantError
 
 from homeassistant.const import (
     CONF_IP_ADDRESS,
@@ -20,7 +16,6 @@ from homeassistant.const import (
 
 from .const import (
     DOMAIN,
-    DEVICE_IDS,
     CONF_DEVICE_ID,
     CONF_DEVICE_NAME,
 )

@@ -7,7 +7,6 @@ from homeassistant.const import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from homeassistant.components.climate import (
     ATTR_HVAC_MODE,
     PRESET_AWAY,

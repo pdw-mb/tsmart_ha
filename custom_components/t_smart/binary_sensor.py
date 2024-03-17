@@ -1,13 +1,9 @@
 import voluptuous as vol
 import logging
 
-from homeassistant.const import (
-    UnitOfTemperature,
-)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 
 from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
