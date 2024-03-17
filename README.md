@@ -26,7 +26,8 @@ In the HA UI go to Settings -> Integrations click "+" and search for "T-Smart Th
 
 * You should take the latest [published release](https://github.com/pdw-mb/tsmart_ha/releases).  
 * To install, place the contents of `custom_components` into the `<config directory>/custom_components` folder of your Home Assistant installation.  
-* Add the following entry to your `configuration.yaml`  
+* Restart Home Assistant  
+
 
 ## Discover thermostats
 
