@@ -146,6 +146,7 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             user_input[CONF_DEVICE_NAME] = self.discovery_info.name
             return await self.async_step_edit(user_input)
 
+        # no discovered devices, show the form for manual entry
         return self.async_show_form(
             step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
         )
