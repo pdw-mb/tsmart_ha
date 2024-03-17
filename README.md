@@ -1,3 +1,5 @@
+[![hacs][hacsbadge]][hacs]
+
 # Tesla T-Smart thermostat Home Assistant integration
 
 This repository provides a custom component for enabling a [Tesla T-Smart immersion heater thermostat](https://www.teslauk.com/product/7795/t-smart-thermostat) to be used with [Home Assistant](https://home-assistant.io).
@@ -10,22 +12,21 @@ You can install the component using either the [HACS add-on](https://hacs.xyz) o
 
 ### HACS Installation
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
+[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=pdw-mb&repository=tsmart_ha&category=Integration)
 
-This component is available as a default repository in HACS.  To enable it:
+Or
 
-* Go to HACS
-* Select "Integrations" 
-* Click "Explore and Download Repositories"
-* Search for "T-Smart" and select "T-Smart Thermostat"
+* Search for `T-Smart Thermostat` in HACS and install it under the "Integrations" category.
 * Click Download
-* Restart Home Assistant
+
+Restart Home Assistant  
+In the HA UI go to Settings -> Integrations click "+" and search for "T-Smart Thermostat"
 
 ### Manual Installation
 
-* Copy (or link) the `custom_components/t_smart/` directory from this repository into your `configuration/custom_components/` directory.
-
-* Restart Home Assistant.
+* You should take the latest [published release](https://github.com/pdw-mb/tsmart_ha/releases).  
+* To install, place the contents of `custom_components` into the `<config directory>/custom_components` folder of your Home Assistant installation.  
+* Add the following entry to your `configuration.yaml`  
 
 ## Discover thermostats
 
@@ -36,5 +37,8 @@ After restarting Home Assistant:
 * Find "T-Smart Thermostat" and click on it.
 
 * Click "OK" and any thermostats on your network should be discovered, or you can manually enter their IP address if not found.  
-Thermostats should have a fixed IP address as the IP address.
+Thermostats must have a fixed IP address to avoid re-discovery.
 
+<!---->
+[hacs]: https://github.com/hacs/integration
+[hacsbadge]: https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge
