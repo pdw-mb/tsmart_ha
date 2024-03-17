@@ -8,3 +8,4 @@ Discovery now in config flow with timeout prompting for manual IP.
 
 Config entries store IP address, id and name of device and used at component load rather than discovery, allows device to come online after HA start and be recognised.
 
+Updated readme with HACS easy install link, also specifying to use a fixed IP.
