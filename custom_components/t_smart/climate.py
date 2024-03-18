@@ -50,8 +50,9 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
 
     # Setting the new TURN_ON / TURN_OFF features isn't enough to make stop the
     # warning message about not setting them
-    # _enable_turn_on_off_backwards_compatibility = False
+    _enable_turn_on_off_backwards_compatibility = False
     _attr_supported_features = (
+        ClimateEntityFeature.TURN_OFF | ClimateEntityFeature.TURN_ON |
         ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.PRESET_MODE
     )
     _attr_preset_modes = list(PRESET_MAP.keys())
@@ -99,7 +100,8 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
 
     @property
     def preset_mode(self):
-        return self._climate_preset(self._tsmart.mode)
+        if self._tsmart.mode:
+            return self._climate_preset(self._tsmart.mode)
 
     async def async_set_preset_mode(self, preset_mode):
         await self._tsmart.async_control_set(

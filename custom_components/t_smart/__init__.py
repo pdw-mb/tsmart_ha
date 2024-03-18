@@ -1,12 +1,17 @@
 """The T-Smart Thermostat integration."""
 from __future__ import annotations
 
+from awesomeversion.awesomeversion import AwesomeVersion
+
+from homeassistant.const import __version__ as HA_VERSION  # noqa: N812
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers.typing import ConfigType
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
 from .const import (
     DOMAIN,
+    MIN_HA_VERSION,
 )
 from .coordinator import DeviceDataUpdateCoordinator
 
@@ -16,6 +21,20 @@ _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [Platform.CLIMATE, Platform.BINARY_SENSOR]
 
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Integration setup."""
+
+    if AwesomeVersion(HA_VERSION) < AwesomeVersion(MIN_HA_VERSION):  # pragma: no cover
+        msg = (
+            "This integration requires at least HomeAssistant version "
+            f" {MIN_HA_VERSION}, you are running version {HA_VERSION}."
+            " Please upgrade HomeAssistant to continue use this integration."
+        )
+        _LOGGER.critical(msg)
+        return False
+
+    return True
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up T-Smart Thermostat from a config entry."""
