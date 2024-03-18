@@ -2,5 +2,6 @@
   "name": "T-Smart thermostat",
   "filename": "t_smart.zip",
   "hide_default_branch": true,
+  "homeassistant": "2024.2.0",
   "zip_release": true
 }
