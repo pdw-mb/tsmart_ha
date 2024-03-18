@@ -18,7 +18,7 @@ from homeassistant.components.climate import (
     HVACMode,
     ClimateEntityFeature,
 )
-from tsmart import TSmartMode
+from .tsmart import TSmartMode
 from .const import (
     DOMAIN,
     PRESET_MANUAL,
@@ -50,9 +50,8 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
 
     # Setting the new TURN_ON / TURN_OFF features isn't enough to make stop the
     # warning message about not setting them
-    _enable_turn_on_off_backwards_compatibility = False
+    # _enable_turn_on_off_backwards_compatibility = False
     _attr_supported_features = (
-        ClimateEntityFeature.TURN_OFF | ClimateEntityFeature.TURN_ON |
         ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.PRESET_MODE
     )
     _attr_preset_modes = list(PRESET_MAP.keys())
@@ -64,6 +63,7 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
     # Inherit name from DeviceInfo, which is obtained from actual device
     _attr_has_entity_name = True
     _attr_name = None
+
 
     async def async_update(self):
         await self._tsmart._async_get_status()
