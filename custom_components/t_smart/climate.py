@@ -52,8 +52,10 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
     # warning message about not setting them
     _enable_turn_on_off_backwards_compatibility = False
     _attr_supported_features = (
-        ClimateEntityFeature.TURN_OFF | ClimateEntityFeature.TURN_ON |
-        ClimateEntityFeature.TARGET_TEMPERATURE | ClimateEntityFeature.PRESET_MODE
+        ClimateEntityFeature.TURN_OFF
+        | ClimateEntityFeature.TURN_ON
+        | ClimateEntityFeature.TARGET_TEMPERATURE
+        | ClimateEntityFeature.PRESET_MODE
     )
     _attr_preset_modes = list(PRESET_MAP.keys())
     _attr_icon = "mdi:water-boiler"
@@ -65,15 +67,15 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
     _attr_has_entity_name = True
     _attr_name = None
 
-
-    async def async_update(self):
-        await self._tsmart._async_get_status()
-
     @property
     def hvac_mode(self):
-        return HVACMode.HEAT if self._tsmart.power else HVACMode.OFF
+        if self._tsmart.power:
+            return HVACMode.HEAT if self._tsmart.power else HVACMode.OFF
 
     async def async_set_hvac_mode(self, hvac_mode):
+        if not self.preset_mode:
+            return
+
         await self._tsmart.async_control_set(
             hvac_mode == HVACMode.HEAT,
             PRESET_MAP[self.preset_mode],
@@ -104,6 +106,9 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
             return self._climate_preset(self._tsmart.mode)
 
     async def async_set_preset_mode(self, preset_mode):
+        if not self.preset_mode:
+            return
+
         await self._tsmart.async_control_set(
             self.hvac_mode == HVACMode.HEAT,
             PRESET_MAP[preset_mode],
