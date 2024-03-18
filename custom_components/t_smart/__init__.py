@@ -19,6 +19,7 @@ PLATFORMS: list[Platform] = [Platform.CLIMATE, Platform.BINARY_SENSOR]
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up T-Smart Thermostat from a config entry."""
+    hass.data.setdefault(DOMAIN, {})
 
     hass.data[DOMAIN][entry.entry_id] = DeviceDataUpdateCoordinator(
         hass=hass,
