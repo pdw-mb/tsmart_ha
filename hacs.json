@@ -1,3 +1,6 @@
 {
-  "name": "T-Smart thermostat"
+  "name": "T-Smart thermostat",
+  "filename": "t_smart.zip",
+  "hide_default_branch": true,
+  "zip_release": true
 }
