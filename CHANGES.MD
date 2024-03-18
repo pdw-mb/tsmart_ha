@@ -6,6 +6,10 @@ Coordinators now loaded at platform init and shared between entities of the same
 
 Discovery now in config flow with timeout prompting for manual IP.
 
+Config flow now allows re-configure to change IP.
+
 Config entries store IP address, id and name of device and used at component load rather than discovery, allows device to come online after HA start and be recognised.
 
 Updated readme with HACS easy install link, also specifying to use a fixed IP.
+
+Added min HA version checking to be 2024.2 to cope with new climate requirements.
