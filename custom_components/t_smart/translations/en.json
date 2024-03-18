@@ -23,5 +23,17 @@
             "no_devices_found": "No devices found on the network.",
             "already_configures": "Already configured."
         }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ip_address": "IP Address"
+                }
+            }
+        },
+        "error": {
+            "unknown": "Unknown error occurred."
+        }
     }
 }

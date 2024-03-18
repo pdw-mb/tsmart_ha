@@ -3,12 +3,17 @@ from __future__ import annotations
 
 import logging
 import asyncio
+import copy
 from typing import Any
 from .tsmart import TSmart
 
 import voluptuous as vol
 
 from homeassistant import config_entries
+from homeassistant.core import callback
+from homeassistant.config_entries import ConfigEntry, OptionsFlow
+from homeassistant.data_entry_flow import FlowResult
+from homeassistant.helpers import selector
 
 from homeassistant.const import (
     CONF_IP_ADDRESS,
@@ -47,18 +52,6 @@ def _base_schema(discovery_info=None):
     else:
         base_schema.update({vol.Required(CONF_IP_ADDRESS): str})
 
-    if discovery_info and CONF_DEVICE_ID in discovery_info:
-        base_schema.update(
-            {
-                vol.Required(
-                    CONF_DEVICE_ID,
-                    description={"suggested_value": discovery_info[CONF_DEVICE_ID]},
-                ): str,
-            }
-        )
-    else:
-        base_schema.update({vol.Required(CONF_DEVICE_ID): str})
-
     return vol.Schema(base_schema)
 
 class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -70,6 +63,12 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Initialize an instance of the TSmart config flow."""
         self.data_schema = _base_schema()
         self.discovery_info = None
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
+        """Get the options flow for this handler."""
+        return OptionsFlowHandler(config_entry)
 
     async def _discover(self):
         """Discover an unconfigured TSmart thermostat."""
@@ -129,7 +128,7 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             # Save instance
             if not errors:
                 return self.async_create_entry(
-                    title=f"T-Smart: {device.device_id}", data=user_input
+                    title=device.device_id, data=user_input
                 )
 
         # no device specified, see if we can discover an unconfigured thermostat
@@ -160,3 +159,99 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="edit", data_schema=self.data_schema, errors=errors
         )
+
+class OptionsFlowHandler(OptionsFlow):
+    """Handle an option flow for TSmart Thermostat."""
+
+    def __init__(self, config_entry: ConfigEntry) -> None:
+        """Initialize options flow."""
+        self.config_entry = config_entry
+        self.current_config: dict = dict(config_entry.data)
+        self.ip: str = self.current_config.get(CONF_IP_ADDRESS)
+        self.device_id: str = self.current_config.get(CONF_DEVICE_ID)
+        self.device_name: int = self.current_config.get(CONF_DEVICE_NAME)
+
+    async def async_step_init(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> FlowResult:
+        """Handle options flow."""
+        errors = {}
+        self.current_config = dict(self.config_entry.data)
+
+        schema = self.build_options_schema()
+        if user_input is not None:
+            errors = await self.save_options(user_input, schema)
+            if not errors:
+                return self.async_create_entry(title="", data={})
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=schema,
+            errors=errors,
+        )
+
+    async def save_options(
+        self,
+        user_input: dict[str, Any],
+        schema: vol.Schema,
+    ) -> dict:
+        """Save options, and return errors when validation fails."""
+
+        self._process_user_input(user_input, schema)
+        self.hass.config_entries.async_update_entry(
+            self.config_entry,
+            data=self.current_config,
+        )
+        return {}
+
+    def _process_user_input(
+        self,
+        user_input: dict[str, Any],
+        schema: vol.Schema,
+    ) -> None:
+        """Process the provided user input against the schema."""
+        for key in schema.schema:
+            if isinstance(key, vol.Marker):
+                key = key.schema
+            if key in user_input:
+                self.current_config[key] = user_input.get(key)
+            elif key in self.current_config:
+                self.current_config.pop(key)
+
+    def build_options_schema(self) -> vol.Schema:
+        """Build the options schema."""
+        data_schema = vol.Schema(
+            {
+                vol.Required(CONF_IP_ADDRESS): selector.TextSelector(
+                    selector.TextSelectorConfig(type=selector.TextSelectorType.TEXT),
+                ),
+            }
+        )
+
+        return _fill_schema_defaults(
+            data_schema,
+            self.current_config,
+        )
+
+
+def _fill_schema_defaults(
+    data_schema: vol.Schema,
+    options: dict[str, str],
+) -> vol.Schema:
+    """Make a copy of the schema with suggested values set to saved options."""
+    schema = {}
+    for key, val in data_schema.schema.items():
+        new_key = key
+        if key in options and isinstance(key, vol.Marker):
+            if (
+                isinstance(key, vol.Optional)
+                and callable(key.default)
+                and key.default()
+            ):
+                new_key = vol.Optional(key.schema, default=options.get(key))  # type: ignore
+            else:
+                new_key = copy.copy(key)
+                new_key.description = {"suggested_value": options.get(key)}  # type: ignore
+        schema[new_key] = val
+    return vol.Schema(schema)

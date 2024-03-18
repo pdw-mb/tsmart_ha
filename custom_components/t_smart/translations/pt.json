@@ -3,15 +3,13 @@
         "step": {
             "user": {
                 "data": {
-                    "ip_address": "IP Address",
-                    "device_id": "Device Id"
+                    "ip_address": "IP Address"
                 }
             },
             "edit": {
                 "title": "Edit connection information",
                 "data": {
-                    "ip_address": "IP Address",
-                    "device_id": "Device Id"
+                    "ip_address": "IP Address"
                 }
             },
             "confirm": {
@@ -24,6 +22,18 @@
         "abort": {
             "no_devices_found": "Não foram encontrados equipamentos na rede.",
             "already_configured": "Equipaemto já configurado."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ip_address": "IP Address"
+                }
+            }
+        },
+        "error": {
+            "unknown": "Unknown error occurred."
         }
     }
 }
