@@ -1,6 +1,8 @@
-Moved tsmart library into custom component to allow rearchitecture of both, can be moved back into library.
+Moved tsmart library into custom component to allow rearchitecture of both, can be moved back into library but it makes it tricky to make changes when there's that dependency.
+
 Re-ordered params of TSmart class, mandatory IP but optional id & name to allow resolution later.
-New async_get_configuration method within library to allow getting of device_id and name, don't get all fields as we won't need them.
+
+New async_get_configuration method within library to allow getting of device_id and name, don't get all fields as we won't need them, might be nice to decode the hw/firmware version as you can add them to HA devices view.
 
 Coordinators now loaded at platform init and shared between entities of the same device.
 
