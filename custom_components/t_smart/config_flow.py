@@ -1,4 +1,5 @@
 """Config flow for T-Smart Thermostat integration."""
+
 from __future__ import annotations
 
 import logging
@@ -37,6 +38,7 @@ CONFIG_VERSION = 1
 
 TIMEOUT = 2
 
+
 def _base_schema(discovery_info=None):
     """Generate base schema."""
     base_schema = {}
@@ -53,6 +55,7 @@ def _base_schema(discovery_info=None):
         base_schema.update({vol.Required(CONF_IP_ADDRESS): str})
 
     return vol.Schema(base_schema)
+
 
 class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Config flow for TSmart Thermostat."""
@@ -94,7 +97,7 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         Abort if device_id already configured.
         """
-        device = TSmart(ip = data[CONF_IP_ADDRESS])
+        device = TSmart(ip=data[CONF_IP_ADDRESS])
 
         try:
             async with asyncio.timeout(TIMEOUT):
@@ -114,7 +117,7 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             # Try to connect and do any error checking here
-            device = TSmart(ip = user_input[CONF_IP_ADDRESS])
+            device = TSmart(ip=user_input[CONF_IP_ADDRESS])
 
             try:
                 async with asyncio.timeout(TIMEOUT):
@@ -127,9 +130,7 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
             # Save instance
             if not errors:
-                return self.async_create_entry(
-                    title=device.device_id, data=user_input
-                )
+                return self.async_create_entry(title=device.device_id, data=user_input)
 
         # no device specified, see if we can discover an unconfigured thermostat
         await self._discover()
@@ -160,6 +161,7 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="edit", data_schema=self.data_schema, errors=errors
         )
 
+
 class OptionsFlowHandler(OptionsFlow):
     """Handle an option flow for TSmart Thermostat."""
 
@@ -180,10 +182,24 @@ class OptionsFlowHandler(OptionsFlow):
         self.current_config = dict(self.config_entry.data)
 
         schema = self.build_options_schema()
+
         if user_input is not None:
-            errors = await self.save_options(user_input, schema)
+            # Try to connect and do any error checking here
+            device = TSmart(ip=user_input[CONF_IP_ADDRESS])
+
+            try:
+                async with asyncio.timeout(TIMEOUT):
+                    await device.async_get_configuration()
+            except TimeoutError:
+                errors["base"] = "no_thermostat_found"
+
             if not errors:
-                return self.async_create_entry(title="", data={})
+                user_input[CONF_DEVICE_ID] = device.device_id
+                user_input[CONF_DEVICE_NAME] = device.name
+
+                errors = await self.save_options(user_input, schema)
+                if not errors:
+                    return self.async_create_entry(title="", data={})
 
         return self.async_show_form(
             step_id="init",
