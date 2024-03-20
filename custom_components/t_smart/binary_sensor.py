@@ -12,6 +12,7 @@ from homeassistant.components.binary_sensor import (
 
 from .const import (
     DOMAIN,
+    COORDINATORS,
 )
 
 from .entity import TSmartCoordinatorEntity
@@ -40,5 +41,5 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    coordinator = hass.data[DOMAIN][config_entry.entry_id]
+    coordinator = hass.data[DOMAIN][COORDINATORS][config_entry.entry_id]
     async_add_entities([TSmartBinarySensorEntity(coordinator)])

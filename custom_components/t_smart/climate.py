@@ -21,6 +21,7 @@ from homeassistant.components.climate import (
 from .tsmart import TSmartMode
 from .const import (
     DOMAIN,
+    COORDINATORS,
     PRESET_MANUAL,
     PRESET_SMART,
     PRESET_TIMER,
@@ -122,5 +123,5 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    coordinator = hass.data[DOMAIN][config_entry.entry_id]
+    coordinator = hass.data[DOMAIN][COORDINATORS][config_entry.entry_id]
     async_add_entities([TSmartClimateEntity(coordinator)])

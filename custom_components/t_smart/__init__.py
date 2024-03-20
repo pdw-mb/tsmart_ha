@@ -1,4 +1,5 @@
 """The T-Smart Thermostat integration."""
+
 from __future__ import annotations
 
 from awesomeversion.awesomeversion import AwesomeVersion
@@ -11,6 +12,7 @@ from homeassistant.core import HomeAssistant
 
 from .const import (
     DOMAIN,
+    COORDINATORS,
     MIN_HA_VERSION,
 )
 from .coordinator import DeviceDataUpdateCoordinator
@@ -34,16 +36,18 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         _LOGGER.critical(msg)
         return False
 
+    hass.data.setdefault(DOMAIN, {})
+    hass.data[DOMAIN][COORDINATORS] = {}
+
     return True
+
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up T-Smart Thermostat from a config entry."""
-    hass.data.setdefault(DOMAIN, {})
 
-    hass.data[DOMAIN][entry.entry_id] = DeviceDataUpdateCoordinator(
-        hass=hass,
-        config_entry=entry
-        )
+    hass.data[DOMAIN][COORDINATORS][entry.entry_id] = DeviceDataUpdateCoordinator(
+        hass=hass, config_entry=entry
+    )
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
@@ -52,6 +56,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     if unload_ok := await hass.config_entries.async_unload_platforms(entry, PLATFORMS):
-        hass.data.pop(DOMAIN, None)
+        hass.data[DOMAIN][COORDINATORS].pop(entry.entry_id, None)
 
     return unload_ok
