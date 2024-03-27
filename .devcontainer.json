@@ -5,6 +5,10 @@
     "runArgs": [
         "--network=host"
     ],
+    "appPort": [
+        8123,
+        "1337:1337/udp"
+    ],
     "forwardPorts": [
         8123
     ],
