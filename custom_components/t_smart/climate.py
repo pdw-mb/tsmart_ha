@@ -68,6 +68,9 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
     _attr_has_entity_name = True
     _attr_name = None
 
+    async def async_update(self):
+        await self._tsmart._async_get_status()
+
     @property
     def hvac_mode(self):
         if self._tsmart.power:
