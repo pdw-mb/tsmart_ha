@@ -80,17 +80,28 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         devices = await TSmart.async_discover()
 
         for device in devices:
-            if device.device_id not in config_entries:
 
-                self.discovery_info = {
-                    CONF_IP_ADDRESS: device.ip,
-                    CONF_DEVICE_ID: device.device_id,
-                    CONF_DEVICE_NAME: device.name,
-                }
-                _LOGGER.debug("Discovered thermostat: %s", self.discovery_info)
+            existing_entries = [
+                entry
+                for entry in self.hass.config_entries.async_entries(DOMAIN)
+                if entry.unique_id == device.device_id
+            ]
+            if existing_entries:
+                _LOGGER.debug(
+                    "%s: Already setup, skipping new discovery",
+                    device.device_id,
+                )
+                continue
 
-                # update with suggested values from discovery
-                self.data_schema = _base_schema(self.discovery_info)
+            self.discovery_info = {
+                CONF_IP_ADDRESS: device.ip,
+                CONF_DEVICE_ID: device.device_id,
+                CONF_DEVICE_NAME: device.name,
+            }
+            _LOGGER.debug("Discovered thermostat: %s", self.discovery_info)
+
+            # update with suggested values from discovery
+            self.data_schema = _base_schema(self.discovery_info)
 
     async def _validate_input(self, data):
         """Validate the user input allows us to connect.
@@ -135,10 +146,11 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         # no device specified, see if we can discover an unconfigured thermostat
         await self._discover()
         if self.discovery_info:
-            await self.async_set_unique_id(self.discovery_info.device_id)
-            user_input[CONF_IP_ADDRESS] = self.discovery_info.ip
-            user_input[CONF_DEVICE_ID] = self.discovery_info.device_id
-            user_input[CONF_DEVICE_NAME] = self.discovery_info.name
+            await self.async_set_unique_id(self.discovery_info[CONF_DEVICE_ID])
+            user_input = {}
+            user_input[CONF_IP_ADDRESS] = self.discovery_info[CONF_IP_ADDRESS]
+            user_input[CONF_DEVICE_ID] = self.discovery_info[CONF_DEVICE_ID]
+            user_input[CONF_DEVICE_NAME] = self.discovery_info[CONF_DEVICE_NAME]
             return await self.async_step_edit(user_input)
 
         # no discovered devices, show the form for manual entry
