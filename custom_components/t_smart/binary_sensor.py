@@ -1,4 +1,3 @@
-import voluptuous as vol
 import logging
 
 from homeassistant.config_entries import ConfigEntry

@@ -5,8 +5,6 @@ from .const import (
 )
 from .coordinator import DeviceDataUpdateCoordinator
 
-from typing import Any
-
 
 class TSmartCoordinatorEntity(CoordinatorEntity[DeviceDataUpdateCoordinator]):
     def __init__(self, coordinator: DeviceDataUpdateCoordinator) -> None:
