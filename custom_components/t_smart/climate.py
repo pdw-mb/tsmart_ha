@@ -7,6 +7,7 @@ from homeassistant.const import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
 from homeassistant.components.climate import (
     ATTR_HVAC_MODE,
     PRESET_AWAY,
@@ -21,12 +22,12 @@ from homeassistant.components.climate import (
 from .tsmart import TSmartMode
 from .const import (
     DOMAIN,
-    COORDINATORS,
     PRESET_MANUAL,
     PRESET_SMART,
     PRESET_TIMER,
+    COORDINATORS,
 )
-
+from .coordinator import DeviceDataUpdateCoordinator
 from .entity import TSmartCoordinatorEntity
 
 from datetime import timedelta
@@ -73,13 +74,9 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
 
     @property
     def hvac_mode(self):
-        if self._tsmart.power:
-            return HVACMode.HEAT if self._tsmart.power else HVACMode.OFF
+        return HVACMode.HEAT if self._tsmart.power else HVACMode.OFF
 
     async def async_set_hvac_mode(self, hvac_mode):
-        if not self.preset_mode:
-            return
-
         await self._tsmart.async_control_set(
             hvac_mode == HVACMode.HEAT,
             PRESET_MAP[self.preset_mode],
@@ -106,13 +103,9 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
 
     @property
     def preset_mode(self):
-        if self._tsmart.mode:
-            return self._climate_preset(self._tsmart.mode)
+        return self._climate_preset(self._tsmart.mode)
 
     async def async_set_preset_mode(self, preset_mode):
-        if not self.preset_mode:
-            return
-
         await self._tsmart.async_control_set(
             self.hvac_mode == HVACMode.HEAT,
             PRESET_MAP[preset_mode],
