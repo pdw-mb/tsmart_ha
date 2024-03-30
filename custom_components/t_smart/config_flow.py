@@ -24,6 +24,11 @@ from .const import (
     DOMAIN,
     CONF_DEVICE_ID,
     CONF_DEVICE_NAME,
+    CONF_TEMPERATURE_MODE,
+    TEMPERATURE_MODE_AVERAGE,
+    TEMPERATURE_MODE_HIGH,
+    TEMPERATURE_MODE_LOW,
+    TEMPERATURE_MODES,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -31,6 +36,16 @@ _LOGGER = logging.getLogger(__name__)
 STEP_USER_DATA_SCHEMA = vol.Schema(
     {
         vol.Required(CONF_IP_ADDRESS): str,
+        vol.Required(
+            CONF_TEMPERATURE_MODE,
+            default=TEMPERATURE_MODE_AVERAGE,
+        ): selector.SelectSelector(
+            selector.SelectSelectorConfig(
+                options=TEMPERATURE_MODES,
+                translation_key="temperature_mode",
+                mode=selector.SelectSelectorMode.DROPDOWN,
+            ),
+        ),
     }
 )
 
@@ -49,6 +64,16 @@ def _base_schema(discovery_info=None):
                     CONF_IP_ADDRESS,
                     description={"suggested_value": discovery_info[CONF_IP_ADDRESS]},
                 ): str,
+                vol.Required(
+                    CONF_TEMPERATURE_MODE,
+                    default=TEMPERATURE_MODE_AVERAGE,
+                ): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=TEMPERATURE_MODES,
+                        translation_key="temperature_mode",
+                        mode=selector.SelectSelectorMode.DROPDOWN,
+                    ),
+                ),
             }
         )
     else:
@@ -151,6 +176,7 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             user_input[CONF_IP_ADDRESS] = self.discovery_info[CONF_IP_ADDRESS]
             user_input[CONF_DEVICE_ID] = self.discovery_info[CONF_DEVICE_ID]
             user_input[CONF_DEVICE_NAME] = self.discovery_info[CONF_DEVICE_NAME]
+            user_input[CONF_TEMPERATURE_MODE] = TEMPERATURE_MODE_AVERAGE
             return await self.async_step_edit(user_input)
 
         # no discovered devices, show the form for manual entry
@@ -253,6 +279,13 @@ class OptionsFlowHandler(OptionsFlow):
             {
                 vol.Required(CONF_IP_ADDRESS): selector.TextSelector(
                     selector.TextSelectorConfig(type=selector.TextSelectorType.TEXT),
+                ),
+                vol.Required(CONF_TEMPERATURE_MODE): selector.SelectSelector(
+                    selector.SelectSelectorConfig(
+                        options=TEMPERATURE_MODES,
+                        translation_key="temperature_mode",
+                        mode=selector.SelectSelectorMode.DROPDOWN,
+                    ),
                 ),
             }
         )

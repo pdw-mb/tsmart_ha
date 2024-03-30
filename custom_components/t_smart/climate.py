@@ -24,6 +24,12 @@ from .const import (
     PRESET_SMART,
     PRESET_TIMER,
     COORDINATORS,
+    ATTR_TEMPERATURE_LOW,
+    ATTR_TEMPERATURE_HIGH,
+    ATTR_TEMPERATURE_AVERAGE,
+    TEMPERATURE_MODE_HIGH,
+    TEMPERATURE_MODE_LOW,
+    TEMPERATURE_MODE_AVERAGE,
 )
 
 from .entity import TSmartCoordinatorEntity
@@ -84,7 +90,13 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
 
     @property
     def current_temperature(self):
-        return self._tsmart.temperature
+        if self.coordinator.temperature_mode == TEMPERATURE_MODE_HIGH:
+            return self._tsmart.temperature_high
+
+        if self.coordinator.temperature_mode == TEMPERATURE_MODE_LOW:
+            return self._tsmart.temperature_low
+
+        return self._tsmart.temperature_average
 
     @property
     def target_temperature(self):
@@ -110,6 +122,22 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
             self.target_temperature,
         )
         await self.coordinator.async_request_refresh()
+
+    @property
+    def extra_state_attributes(self) -> dict[str, str] | None:
+        """Return the state attributes of the battery type."""
+
+        # Temperature related attributes
+        attrs = {
+            ATTR_TEMPERATURE_LOW: self._tsmart.temperature_low,
+            ATTR_TEMPERATURE_HIGH: self._tsmart.temperature_high,
+            ATTR_TEMPERATURE_AVERAGE: self._tsmart.temperature_average,
+        }
+
+        super_attrs = super().extra_state_attributes
+        if super_attrs:
+            attrs.update(super_attrs)
+        return attrs
 
 
 async def async_setup_entry(

@@ -23,12 +23,15 @@ class TSmartMode(IntEnum):
 
 
 class TSmart:
-    def __init__(self, ip, device_id = None, name = None):
+
+    def __init__(self, ip, device_id=None, name=None):
         self.ip = ip
         self.device_id = device_id
         self.name = name
         self.power = None
-        self.temperature = None
+        self.temperature_average = None
+        self.temperature_high = None
+        self.temperature_low = None
         self.mode = None
         self.setpoint = None
         self.relay = None
@@ -233,7 +236,9 @@ class TSmart:
             checksum,
         ) = response_struct.unpack(response)
 
-        self.temperature = (t_high + t_low) / 20
+        self.temperature_average = (t_high + t_low) / 20
+        self.temperature_high = t_high / 10
+        self.temperature_low = t_low / 10
         self.setpoint = setpoint / 10
         self.power = bool(power)
         self.mode = TSmartMode(mode)

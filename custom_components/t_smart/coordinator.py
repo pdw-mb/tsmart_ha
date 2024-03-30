@@ -15,6 +15,8 @@ from .const import (
     DOMAIN,
     CONF_DEVICE_ID,
     CONF_DEVICE_NAME,
+    CONF_TEMPERATURE_MODE,
+    TEMPERATURE_MODE_AVERAGE,
 )
 import logging
 
@@ -31,9 +33,17 @@ class DeviceDataUpdateCoordinator(DataUpdateCoordinator):
         """Initialize the data update coordinator."""
 
         self.config_entry = config_entry
-        self.device = TSmart(config_entry.data[CONF_IP_ADDRESS], config_entry.data[CONF_DEVICE_ID], config_entry.data[CONF_DEVICE_NAME])
+        self.device = TSmart(
+            config_entry.data[CONF_IP_ADDRESS],
+            config_entry.data[CONF_DEVICE_ID],
+            config_entry.data[CONF_DEVICE_NAME],
+        )
         self._attr_unique_id = self.device.device_id
         self._error_count = 0
+
+        self.temperature_mode = config_entry.data.get(
+            CONF_TEMPERATURE_MODE, TEMPERATURE_MODE_AVERAGE
+        )
 
         super().__init__(
             hass,
