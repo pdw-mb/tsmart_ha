@@ -40,6 +40,10 @@ After restarting Home Assistant:
 * Click "OK" and any thermostats on your network should be discovered, or you can manually enter their IP address if not found.  
 Thermostats must have a fixed IP address to avoid re-discovery.
 
+* If your change the IP address of your thermostat you will have to modify this in the integration by going into settings/configure.
+
+* By default the integration takes the average of both sensors within the thermostats, this can be changed by going into settings, configuring the thermostat and choosing a different temperature mode. For vertical thermostats the High setting will match the display and the app.
+
 <!---->
 [hacs]: https://github.com/hacs/integration
 [hacsbadge]: https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge
