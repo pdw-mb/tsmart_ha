@@ -35,6 +35,7 @@ class TSmart:
         self.mode = None
         self.setpoint = None
         self.relay = None
+        self.request_successful = False
 
     async def async_discover(stop_on_first=False, tries=2, timeout=2):
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Internet, UDP
@@ -127,6 +128,8 @@ class TSmart:
         return devices.values()
 
     async def _async_request(self, request, response_struct):
+        self.request_successful = False
+
         t = 0
         request = bytearray(request)
         for b in request[:-1]:
@@ -183,6 +186,8 @@ class TSmart:
         if data is None:
             _LOGGER.warn("Timed-out fetching status from %s" % self.ip)
             return None
+
+        self.request_successful = True
         return data
 
     async def async_get_configuration(self):

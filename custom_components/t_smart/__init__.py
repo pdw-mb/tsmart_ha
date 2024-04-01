@@ -47,9 +47,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))
 
-    hass.data[DOMAIN][COORDINATORS][entry.entry_id] = DeviceDataUpdateCoordinator(
-        hass=hass, config_entry=entry
-    )
+    coordinator = DeviceDataUpdateCoordinator(hass=hass, config_entry=entry)
+
+    hass.data[DOMAIN][COORDINATORS][entry.entry_id] = coordinator
+
+    coordinator.async_config_entry_first_refresh()
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
