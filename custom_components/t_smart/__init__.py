@@ -9,6 +9,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.update_coordinator import ConfigEntryNotReady
 
 from .const import (
     DOMAIN,
@@ -51,7 +52,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     hass.data[DOMAIN][COORDINATORS][entry.entry_id] = coordinator
 
-    coordinator.async_config_entry_first_refresh()
+    await coordinator.async_config_entry_first_refresh()
+
+    if coordinator.device.request_successful is False:
+        raise ConfigEntryNotReady(f"Unable to connect to {coordinator.device.ip}")
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True

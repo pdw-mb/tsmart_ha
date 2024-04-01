@@ -2,7 +2,7 @@
 
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from homeassistant.const import (
     CONF_IP_ADDRESS,
@@ -55,6 +55,3 @@ class DeviceDataUpdateCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         """Update the state of the device."""
         await self.device.async_get_status()
-
-        if self.device.request_successful == False:
-            raise UpdateFailed()
