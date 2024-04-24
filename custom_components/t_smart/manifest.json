@@ -12,6 +12,6 @@
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/pdw-mb/tsmart_ha/issues",
   "ssdp": [],
-  "version": "0.4.1",
+  "version": "0.4.2",
   "zeroconf": []
 }
