@@ -1,31 +1,16 @@
-[![hacs][hacsbadge]][hacs]
+This is a fork of https://github.com/pdw-mb/tsmart_ha, rearchitected to support manual IP addresses, choice of sensors and identification of thermostats when they are turned on after HA has started.
+
+As this has moved to IP addresses rather than broadcast discovery you will need a fixed IP address on your thermostat and re-add it when changing to this integration.
+
+When merged into the pdw-mb HACS version you should switch to using that.
 
 # Tesla T-Smart thermostat Home Assistant integration
 
-This repository provides a custom component for enabling a [Tesla T-Smart immersion heater thermostat](https://www.teslauk.com/product/7795/t-smart-thermostat) to be used with [Home Assistant](https://home-assistant.io).
-
-**This is a community developed and maintained project, and is not supported or endorsed by Tesla (UK) Ltd.**
-
-## Installation
-
-You can install the component using either the [HACS add-on](https://hacs.xyz) or manually.
-
-### HACS Installation
-
-[![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=pdw-mb&repository=tsmart_ha&category=Integration)
-
-Or
-
-* Search for `T-Smart Thermostat` in HACS and install it under the "Integrations" category.
-* Click Download
-
-Restart Home Assistant  
-In the HA UI go to Settings -> Integrations click "+" and search for "T-Smart Thermostat"
 
 ### Manual Installation
 
-* You should take the latest [published release](https://github.com/pdw-mb/tsmart_ha/releases).  
-* To install, place the contents of `custom_components` into the `<config directory>/custom_components` folder of your Home Assistant installation.  
+* You should take the latest zip from releases 
+* To install, place the contents of the zip into the `<config directory>/custom_components` folder of your Home Assistant installation.  
 * Restart Home Assistant  
 
 
