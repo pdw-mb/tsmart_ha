@@ -20,6 +20,9 @@ from .const import (
     COORDINATORS,
     TEMPERATURE_MODE_HIGH,
     TEMPERATURE_MODE_LOW,
+    ATTR_TEMPERATURE_HIGH,
+    ATTR_TEMPERATURE_LOW,
+    ATTR_TEMPERATURE_AVERAGE,
 )
 
 from .entity import TSmartCoordinatorEntity
@@ -56,6 +59,37 @@ class TSmartSensorEntity(TSmartCoordinatorEntity, SensorEntity):
             self._attr_native_unit_of_measurement,
             PRECISION_TENTHS,
         )
+
+    @property
+    def extra_state_attributes(self) -> dict[str, str] | None:
+        """Return the state attributes of the sensor."""
+
+        # Temperature related attributes
+        attrs = {
+            ATTR_TEMPERATURE_LOW: show_temp(
+                self.hass,
+                self._tsmart.temperature_low,
+                self._attr_native_unit_of_measurement,
+                PRECISION_TENTHS,
+            ),
+            ATTR_TEMPERATURE_HIGH: show_temp(
+                self.hass,
+                self._tsmart.temperature_high,
+                self._attr_native_unit_of_measurement,
+                PRECISION_TENTHS,
+            ),
+            ATTR_TEMPERATURE_AVERAGE: show_temp(
+                self.hass,
+                self._tsmart.temperature_average,
+                self._attr_native_unit_of_measurement,
+                PRECISION_TENTHS,
+            ),
+        }
+
+        super_attrs = super().extra_state_attributes
+        if super_attrs:
+            attrs.update(super_attrs)
+        return attrs
 
 
 async def async_setup_entry(

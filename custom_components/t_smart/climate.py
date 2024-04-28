@@ -6,6 +6,7 @@ from homeassistant.const import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.temperature import display_temp as show_temp
 from homeassistant.components.climate import (
     ATTR_HVAC_MODE,
     PRESET_AWAY,
@@ -16,6 +17,10 @@ from homeassistant.components.climate import (
     ClimateEntity,
     HVACMode,
     ClimateEntityFeature,
+)
+from homeassistant.const import (
+    UnitOfTemperature,
+    PRECISION_TENTHS,
 )
 from .tsmart import TSmartMode
 from .const import (
@@ -129,9 +134,24 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
 
         # Temperature related attributes
         attrs = {
-            ATTR_TEMPERATURE_LOW: self._tsmart.temperature_low,
-            ATTR_TEMPERATURE_HIGH: self._tsmart.temperature_high,
-            ATTR_TEMPERATURE_AVERAGE: self._tsmart.temperature_average,
+            ATTR_TEMPERATURE_LOW: show_temp(
+                self.hass,
+                self._tsmart.temperature_low,
+                self._attr_temperature_unit,
+                PRECISION_TENTHS,
+            ),
+            ATTR_TEMPERATURE_HIGH: show_temp(
+                self.hass,
+                self._tsmart.temperature_high,
+                self._attr_temperature_unit,
+                PRECISION_TENTHS,
+            ),
+            ATTR_TEMPERATURE_AVERAGE: show_temp(
+                self.hass,
+                self._tsmart.temperature_average,
+                self._attr_temperature_unit,
+                PRECISION_TENTHS,
+            ),
         }
 
         super_attrs = super().extra_state_attributes
