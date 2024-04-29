@@ -209,7 +209,7 @@ class OptionsFlowHandler(OptionsFlow):
         self.current_config: dict = dict(config_entry.data)
         self.ip: str = self.current_config.get(CONF_IP_ADDRESS)
         self.device_id: str = self.current_config.get(CONF_DEVICE_ID)
-        self.device_name: int = self.current_config.get(CONF_DEVICE_NAME)
+        self.device_name: str = self.current_config.get(CONF_DEVICE_NAME)
 
     async def async_step_init(
         self,
