@@ -1,6 +1,7 @@
 [![hacs][hacsbadge]][hacs]
 [![Downloads][download-latest-shield]](Downloads)
 
+
 This is a fork of https://github.com/pdw-mb/tsmart_ha, rearchitected to support manual IP addresses, choice of sensors and identification of thermostats when they are turned on after HA has started.
 
 As this has moved to IP addresses rather than broadcast discovery you will need a fixed IP address on your thermostat and re-add it when changing to this integration.
@@ -50,4 +51,6 @@ Thermostats must have a fixed IP address to avoid re-discovery.
 
 <!---->
 [hacs]: https://github.com/hacs/integration
-[hacsbadge]: https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge
+[hacsbadge]: https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge
+[download-latest-shield]: https://img.shields.io/github/downloads/andrew-codechimp/tsmart_ha/latest/total?style=for-the-badge
+
