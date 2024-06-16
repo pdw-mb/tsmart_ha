@@ -1,4 +1,7 @@
 {
   "name": "T-Smart thermostat",
-  "homeassistant": "2024.2.0"
+  "filename": "t_smart.zip",
+  "homeassistant": "2024.2.0",
+  "render_readme": true,
+  "zip_release": true
 }
