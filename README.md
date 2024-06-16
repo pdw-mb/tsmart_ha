@@ -13,7 +13,7 @@ When/if merged into the original pdw-mb version you should switch to using that.
 
 ### HACS
 
-If you are using the pdw-mb HACS version you should uninstall it first and remove the repository from HACS to avoid confusion. If you see two then select the one with the description start with fork.
+If you are using the pdw-mb HACS version you should uninstall it first and remove the repository from HACS to avoid confusion. If you see two then select the one with the description starting with fork.
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=andrew-codechimp&repository=tsmart_ha&category=Integration)
 
