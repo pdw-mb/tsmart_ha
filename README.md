@@ -6,8 +6,6 @@ This is a fork of https://github.com/pdw-mb/tsmart_ha, rearchitected to support 
 
 As this has moved to IP addresses rather than broadcast discovery you will need a fixed IP address on your thermostat and re-add it when changing to this integration.
 
-When/if merged into the original pdw-mb version you should switch to using that.
-
 # Tesla T-Smart thermostat Home Assistant integration
 
 ## Installation
