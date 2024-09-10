@@ -2,7 +2,7 @@
   "domain": "t_smart",
   "name": "T-Smart Thermostat",
   "codeowners": [
-    "@pdw-mb"
+    "@andrew-codechimp"
   ],
   "config_flow": true,
   "dependencies": [],
