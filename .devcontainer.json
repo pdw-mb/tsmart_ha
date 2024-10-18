@@ -1,6 +1,6 @@
 {
     "name": "pdw-mb/tsmart",
-    "image": "mcr.microsoft.com/vscode/devcontainers/python:3.12-bullseye",
+    "image": "mcr.microsoft.com/vscode/devcontainers/python:3.12",
     "postCreateCommand": "scripts/setup",
     "runArgs": [
         "--network=host"
@@ -25,22 +25,25 @@
                 "github.vscode-pull-request-github",
                 "ryanluker.vscode-coverage-gutters",
                 "ms-python.vscode-pylance",
-                "ms-python.black-formatter",
-                "ms-python.debugpy"
+                "charliermarsh.ruff"
             ],
             "settings": {
                 "files.eol": "\n",
                 "editor.tabSize": 4,
                 "python.pythonPath": "/usr/bin/python3",
                 "python.analysis.autoSearchPaths": false,
-                "python.formatting.provider": "black",
-                "python.formatting.blackPath": "/usr/local/py-utils/bin/black",
                 "editor.formatOnPaste": false,
                 "editor.formatOnSave": true,
                 "editor.formatOnType": true,
                 "files.trimTrailingWhitespace": true,
                 "[markdown]": {
                     "files.trimTrailingWhitespace": false
+                },
+                "[python]": {
+                    "editor.defaultFormatter": "charliermarsh.ruff",
+                    "editor.codeActionsOnSave": {
+                        "source.organizeImports": "explicit"
+                    }
                 }
             }
         }
