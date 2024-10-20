@@ -1,45 +1,40 @@
-import logging
+"""Climate platform for t_smart."""
 
-from homeassistant.const import (
-    UnitOfTemperature,
+import logging
+from datetime import timedelta
+
+from homeassistant.components.climate import (
+    PRESET_AWAY,
+    PRESET_BOOST,
+    PRESET_ECO,
+    ClimateEntity,
+    ClimateEntityFeature,
+    HVACAction,
+    HVACMode,
 )
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import (
+    PRECISION_TENTHS,
+    UnitOfTemperature,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.temperature import display_temp as show_temp
-from homeassistant.components.climate import (
-    ATTR_HVAC_MODE,
-    PRESET_AWAY,
-    PRESET_BOOST,
-    PRESET_COMFORT,
-    PRESET_ECO,
-    PRESET_NONE,
-    ClimateEntity,
-    HVACMode,
-    ClimateEntityFeature,
-)
-from homeassistant.const import (
-    UnitOfTemperature,
-    PRECISION_TENTHS,
-)
-from .tsmart import TSmartMode
+
 from .const import (
+    ATTR_TEMPERATURE_AVERAGE,
+    ATTR_TEMPERATURE_HIGH,
+    ATTR_TEMPERATURE_LOW,
+    COORDINATORS,
     DOMAIN,
     PRESET_MANUAL,
     PRESET_SMART,
     PRESET_TIMER,
-    COORDINATORS,
-    ATTR_TEMPERATURE_LOW,
-    ATTR_TEMPERATURE_HIGH,
-    ATTR_TEMPERATURE_AVERAGE,
     TEMPERATURE_MODE_HIGH,
     TEMPERATURE_MODE_LOW,
-    TEMPERATURE_MODE_AVERAGE,
 )
-
 from .entity import TSmartCoordinatorEntity
-
-from datetime import timedelta
+from .tsmart import TSmartMode
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -56,6 +51,8 @@ PRESET_MAP = {
 
 
 class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
+    """t_smart Climate class."""
+
     _attr_temperature_unit = UnitOfTemperature.CELSIUS
     _attr_hvac_modes = [HVACMode.OFF, HVACMode.HEAT]
 
@@ -79,13 +76,27 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
     _attr_name = None
 
     async def async_update(self):
+        """Update the state of the climate entity."""
         await self._tsmart._async_get_status()
 
     @property
     def hvac_mode(self):
+        """Get the current mode."""
         return HVACMode.HEAT if self._tsmart.power else HVACMode.OFF
 
+    @property
+    def hvac_action(self):
+        """Get the current action."""
+        if self._tsmart.power and not self._tsmart.relay:
+            return HVACAction.IDLE
+        if self._tsmart.power and self._tsmart.relay:
+            return HVACAction.HEATING
+        if not self._tsmart.power:
+            return HVACAction.OFF
+
+
     async def async_set_hvac_mode(self, hvac_mode):
+        """Set the current mode."""
         await self._tsmart.async_control_set(
             hvac_mode == HVACMode.HEAT,
             PRESET_MAP[self.preset_mode],
@@ -95,6 +106,7 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
 
     @property
     def current_temperature(self):
+        """Get the current temperature."""
         if self.coordinator.temperature_mode == TEMPERATURE_MODE_HIGH:
             return self._tsmart.temperature_high
 
@@ -105,22 +117,23 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
 
     @property
     def target_temperature(self):
+        """Get the target temperature."""
         return self._tsmart.setpoint
 
     async def async_set_temperature(self, temperature, **kwargs):
+        """Set the temperature."""
         await self._tsmart.async_control_set(
             self.hvac_mode == HVACMode.HEAT, PRESET_MAP[self.preset_mode], temperature
         )
         await self.coordinator.async_request_refresh()
 
-    def _climate_preset(self, tsmart_mode):
-        return next((k for k, v in PRESET_MAP.items() if v == tsmart_mode), None)
-
     @property
     def preset_mode(self):
-        return self._climate_preset(self._tsmart.mode)
+        """Get the preset mode."""
+        return next((k for k, v in PRESET_MAP.items() if v == self._tsmart.mode), None)
 
     async def async_set_preset_mode(self, preset_mode):
+        """Set the preset mode."""
         await self._tsmart.async_control_set(
             self.hvac_mode == HVACMode.HEAT,
             PRESET_MAP[preset_mode],
@@ -165,5 +178,6 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
+    """Set up the climate platform."""
     coordinator = hass.data[DOMAIN][COORDINATORS][config_entry.entry_id]
     async_add_entities([TSmartClimateEntity(coordinator)])
