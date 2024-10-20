@@ -1,40 +1,37 @@
-import logging
+"""Sensor platform for t_smart."""
 
+from datetime import timedelta
+
+from homeassistant.components.sensor import (
+    SensorDeviceClass,
+    SensorEntity,
+)
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import (
+    PRECISION_TENTHS,
+    UnitOfTemperature,
+)
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.temperature import display_temp as show_temp
 
-from homeassistant.components.sensor import (
-    SensorEntity,
-    SensorDeviceClass,
-)
-
-from homeassistant.const import (
-    UnitOfTemperature,
-    PRECISION_TENTHS,
-)
-
 from .const import (
-    DOMAIN,
-    COORDINATORS,
-    TEMPERATURE_MODE_HIGH,
-    TEMPERATURE_MODE_LOW,
+    ATTR_TEMPERATURE_AVERAGE,
     ATTR_TEMPERATURE_HIGH,
     ATTR_TEMPERATURE_LOW,
-    ATTR_TEMPERATURE_AVERAGE,
+    COORDINATORS,
+    DOMAIN,
+    TEMPERATURE_MODE_HIGH,
+    TEMPERATURE_MODE_LOW,
 )
-
 from .entity import TSmartCoordinatorEntity
-
-from datetime import timedelta
-
-_LOGGER = logging.getLogger(__name__)
 
 SCAN_INTERVAL = timedelta(seconds=5)
 
 
 class TSmartSensorEntity(TSmartCoordinatorEntity, SensorEntity):
+    """t_smart Sensor class."""
+
     _attr_device_class = SensorDeviceClass.TEMPERATURE
     _attr_native_unit_of_measurement = UnitOfTemperature.CELSIUS
     _attr_suggested_display_precision = 1
@@ -97,5 +94,6 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
+    """Set up the sensor platform."""
     coordinator = hass.data[DOMAIN][COORDINATORS][config_entry.entry_id]
     async_add_entities([TSmartSensorEntity(coordinator)])

@@ -2,34 +2,30 @@
 
 from __future__ import annotations
 
-import logging
 import asyncio
 import copy
+import logging
 from typing import Any
-from .tsmart import TSmart
 
 import voluptuous as vol
-
 from homeassistant import config_entries
-from homeassistant.core import callback
 from homeassistant.config_entries import ConfigEntry, OptionsFlow
-from homeassistant.data_entry_flow import FlowResult
-from homeassistant.helpers import selector
-
 from homeassistant.const import (
     CONF_IP_ADDRESS,
 )
+from homeassistant.core import callback
+from homeassistant.data_entry_flow import FlowResult
+from homeassistant.helpers import selector
 
 from .const import (
-    DOMAIN,
     CONF_DEVICE_ID,
     CONF_DEVICE_NAME,
     CONF_TEMPERATURE_MODE,
+    DOMAIN,
     TEMPERATURE_MODE_AVERAGE,
-    TEMPERATURE_MODE_HIGH,
-    TEMPERATURE_MODE_LOW,
     TEMPERATURE_MODES,
 )
+from .tsmart import TSmart
 
 _LOGGER = logging.getLogger(__name__)
 

@@ -141,7 +141,7 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
 
     @property
     def extra_state_attributes(self) -> dict[str, str] | None:
-        """Return the state attributes of the battery type."""
+        """Return the state attributes of the immersion heater."""
 
         # Temperature related attributes
         attrs = {
