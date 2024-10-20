@@ -90,10 +90,8 @@ class TSmartClimateEntity(TSmartCoordinatorEntity, ClimateEntity):
         if self._tsmart.power:
             if self._tsmart.relay:
                 return HVACAction.HEATING
-            else:
-                return HVACAction.IDLE
+            return HVACAction.IDLE
         return HVACAction.OFF
-
 
     async def async_set_hvac_mode(self, hvac_mode):
         """Set the current mode."""
