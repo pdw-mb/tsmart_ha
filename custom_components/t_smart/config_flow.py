@@ -199,10 +199,9 @@ class TSmartConfigFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 class OptionsFlowHandler(OptionsFlow):
     """Handle an option flow for TSmart Thermostat."""
 
-    def __init__(self, config_entry: ConfigEntry) -> None:
+    def __init__(self) -> None:
         """Initialize options flow."""
-        self.config_entry = config_entry
-        self.current_config: dict = dict(config_entry.data)
+        self.current_config: dict = dict(self.config_entry.data)
         self.ip: str = self.current_config.get(CONF_IP_ADDRESS)
         self.device_id: str = self.current_config.get(CONF_DEVICE_ID)
         self.device_name: str = self.current_config.get(CONF_DEVICE_NAME)
