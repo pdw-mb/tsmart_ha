@@ -1,6 +1,6 @@
 {
     "name": "pdw-mb/tsmart",
-    "image": "mcr.microsoft.com/vscode/devcontainers/python:3.12",
+    "image": "mcr.microsoft.com/vscode/devcontainers/python:dev-3.13",
     "postCreateCommand": "scripts/setup",
     "runArgs": [
         "--network=host"
