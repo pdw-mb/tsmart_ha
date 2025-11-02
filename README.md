@@ -1,5 +1,7 @@
 # Tesla T-Smart thermostat Home Assistant integration
 
+**I am no longer maintaining this project as I've replaced my hot water tank and unfortunately this thermostat isn't compatible with the new one. I'd recommend looking at https://github.com/andrew-codechimp/tsmart_ha.**
+
 This repository provides a custom component for enabling a [Tesla T-Smart immersion heater thermostat](https://www.teslauk.com/product/7795/t-smart-thermostat) to be used with [Home Assistant](https://home-assistant.io).
 
 **This is a community developed and maintained project, and is not supported or endorsed by Tesla (UK) Ltd.**
